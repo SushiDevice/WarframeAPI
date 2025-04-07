@@ -3,8 +3,8 @@ import asyncio
 
 MbaseURL = "https://api.warframe.market/v1"
 SbaseURL = "https://api.warframestat.us"
-
-#todo ==> I should create an only session instance for all this request to the API
+# Still not useful
+#AssetUrl = "https://warframe.market/static/assets"
 
 async def request_item(item: str):
     async with aiohttp.ClientSession() as session:
@@ -21,7 +21,6 @@ async def request_item(item: str):
                         }
             return f_result
 
-#Todo ==> add inventory
 async def void_trader():
     async with aiohttp.ClientSession() as session:
        async with session.get(f"{SbaseURL}/pc/voidTrader") as response:
@@ -50,5 +49,19 @@ async def get_drop(item: str):
             }
             return f_result
 
-#test = asyncio.run(get_drop("gauss prime blueprint"))
+async def item_info(item: str):
+    async with aiohttp.ClientSession() as session:
+       async with session.get(f"{SbaseURL}/items/{item}") as response:
+            result = await response.json()
+            damages = result["damage"]
+            damageStat = damages.items()
+            damageStat = "\n".join([f"{k}: {v}" for k, v in damageStat])
+            image = result["wikiaThumbnail"]
+            f_result = {
+                "Stats": damageStat,
+                "Image": image
+                }            
+            return f_result
+       
+#test = asyncio.run(item_info("boltor"))
 #print(test)
