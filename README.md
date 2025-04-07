@@ -8,5 +8,5 @@
 
  Currently using:
 
- Warframe Community market API: https://warframe.market/api_docs
- Warframe Status API: https://docs.warframestat.us/
+ - Warframe Community market API: https://warframe.market/api_docs
+ - Warframe Status API: https://docs.warframestat.us/
