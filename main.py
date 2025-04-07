@@ -76,10 +76,26 @@ async def baro(ctx):
         embed.set_footer(text="WarframeMarketBot")
         await ctx.send(embed=embed)
     except:
-        await ctx.send(f"An error ocurred in your query, please try again later")
+        await ctx.send("An error ocurred in your query, please try again later")
+
+@bot.command()
+async def drops(ctx,*, item):
+    try:
+        call = await api_calls.get_drop(item)
+        embed = discord.Embed(
+            title=f"Your requested item: {item}",
+            color=discord.Color.green()
+        )
+        relics = '\n'.join(call["Relics"])
+        embed.add_field(name="Can be found in the following relics:", value=f"```{relics}```")
+        embed.set_footer(text="WarframeMarketBot")
+        await ctx.send(embed=embed)
+    except: 
+        await ctx.send("An error ocurred in your query, please try again later")
+
 
 # In construction
-@bot.command()
+"""@bot.command()
 async def set_alert(ctx, time):
 
     if not time:
@@ -87,27 +103,7 @@ async def set_alert(ctx, time):
                  "YYYY-MM-DD"
                  )
     else: 
-        start_time = datetime.datetime.now()
-
-
-@bot.command()
-async def get_drops(ctx, item):
-    try:
-        call = await api_calls.request_item(item)
-        embed = discord.Embed(
-            title=f"Your requested item '{item}' can be found in the following relics",
-            description=(
-               
-            ),
-            color=discord.Color.green()
-        )
-        embed.add_field(name="Relic", value=call['Relic'], inline=False)
-        embed.set_footer(text="WarframeMarketBot")
-        await ctx.send(embed=embed)
-
-    except:
-        await ctx.send("An error ocurred in your query, please try again later")
-
+        start_time = datetime.datetime.now()"""
 
 bot.run(bot_key,
             log_handler= handler

@@ -41,15 +41,14 @@ async def get_drop(item: str):
        async with session.get(f"{SbaseURL}/drops/search/{item}") as response:
             result = await response.json()
             relics = []
+            # Response is a list of objects
             for i in result:
-                print(i)
-            """for object in result :
-                relics.append(result["place"]) 
-
+                relics.append(i["place"])
+                continue                
             f_result = {
                 "Relics": relics
-            }"""
-            #return result
+            }
+            return f_result
 
-test = asyncio.run(get_drop("gauss prime blueprint"))
-print(test)
+#test = asyncio.run(get_drop("gauss prime blueprint"))
+#print(test)
