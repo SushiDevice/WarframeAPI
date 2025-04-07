@@ -1,5 +1,5 @@
 import aiohttp
-import asyncio
+import asyncio # For testing purposes
 
 MbaseURL = "https://api.warframe.market/v1"
 SbaseURL = "https://api.warframestat.us"
@@ -55,7 +55,9 @@ async def item_info(item: str):
             result = await response.json()
             damages = result["damage"]
             damageStat = damages.items()
+            # Store as a list of tuples
             damageStat = "\n".join([f"{k}: {v}" for k, v in damageStat])
+            # Image from wiki 
             image = result["wikiaThumbnail"]
             f_result = {
                 "Stats": damageStat,
@@ -63,5 +65,30 @@ async def item_info(item: str):
                 }            
             return f_result
        
-#test = asyncio.run(item_info("boltor"))
-#print(test)
+async def get_warframe(warframe: str):
+    async with aiohttp.ClientSession() as session:
+       async with session.get(f"{SbaseURL}/warframes/search/{warframe}") as response:
+            result = await response.json()
+            # When querying a base warframe, the result is a list containing the base warframe and the prime version
+            # We need to get the first element of the list
+            result = result[0]
+            health = result["health"]
+            armor = result["armor"]
+            shields = result["shield"]
+            energy = result["power"]
+            image = result["wikiaThumbnail"]
+            aura = result["aura"]
+            mastery = result["masteryReq"]
+            f_result = {
+                "Health": health,
+                "Armor": armor,
+                "Shields": shields,
+                "Energy": energy,
+                "Image": image,
+                "Aura": aura,
+                "Mastery": mastery
+            }
+            return f_result
+       
+test = asyncio.run(get_warframe("volt"))
+print(test)
