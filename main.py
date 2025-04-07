@@ -31,7 +31,7 @@ bot = commands.Bot( command_prefix='!',
 global timeAlert
 
 @bot.command()
-async def items(ctx, item):
+async def price(ctx, item):
     try:
         #testing this
         emoji = ctx.bot.get_emoji(1357688180089819177)
@@ -96,7 +96,7 @@ async def drops(ctx,*, item, member: discord.Member = None):
         await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
 
 @bot.command()
-async def info(ctx,*, item, member: discord.Member = None):
+async def iteminfo(ctx,*, item, member: discord.Member = None):
     try:
         if member is None:
             member = ctx.author
