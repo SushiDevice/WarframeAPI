@@ -47,7 +47,7 @@ async def items(ctx, item):
             ),
             color=discord.Color.green()
         )
-        embed.set_footer(text="WarframeMarketBot")
+        embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
 
     except Exception as e:
@@ -72,38 +72,44 @@ async def baro(ctx):
              color=discord.Color.green()
         )
         #embed.set_image(url="https://static.wikia.nocookie.net/warframe/images/a/a7/TennoCon2020BaroCropped.png/revision/latest?cb=20200712232455")
-        embed.set_footer(text="WarframeMarketBot")
+        embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
     except:
         await ctx.send("An error ocurred in your query, please try again later")
 
 @bot.command()
-async def drops(ctx,*, item):
+async def drops(ctx,*, item, member: discord.Member = None):
     try:
+        if member is None:
+            member = ctx.author
         call = await api_calls.get_drop(item)
         embed = discord.Embed(
             title=f"Your requested item: {item}",
             color=discord.Color.green()
         )
+        embed.set_author(name=member.display_name, icon_url=member.avatar.url)
         relics = '\n'.join(call["Relics"])
         embed.add_field(name="Can be found in the following relics:", value=f"```{relics}```")
-        embed.set_footer(text="WarframeMarketBot")
+        embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
     except Exception as e: 
         await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
 
 @bot.command()
-async def info(ctx,*, item):
+async def info(ctx,*, item, member: discord.Member = None):
     try:
+        if member is None:
+            member = ctx.author
         call = await api_calls.item_info(item)
         embed = discord.Embed(
             title=f"Your requested item: {item}",
             color=discord.Color.green()
         )
+        embed.set_author(name=member.display_name, icon_url=member.avatar.url)
         embed.set_thumbnail(url=call["Image"])
-        embed.add_field(name="", value= "Your item stats are the following:", inline=False)
+        embed.add_field(name="", value= "Your item stats are the following:", inline=True)
         embed.add_field(name= "", value= call["Stats"], inline=False)	
-        embed.set_footer(text="WarframeMarketBot")
+        embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
     except: 
         await ctx.send("An error ocurred in your query, please try again later")
