@@ -50,8 +50,8 @@ async def items(ctx, item):
         embed.set_footer(text="WarframeMarketBot")
         await ctx.send(embed=embed)
 
-    except:
-        await ctx.send("An error ocurred in your query, please try again later")
+    except Exception as e:
+        await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
 
 @bot.command()
 async def baro(ctx):
@@ -71,7 +71,6 @@ async def baro(ctx):
             ),
              color=discord.Color.green()
         )
-        embed.add_field(name="Relic", value="Soy una reliquia", inline=False)
         #embed.set_image(url="https://static.wikia.nocookie.net/warframe/images/a/a7/TennoCon2020BaroCropped.png/revision/latest?cb=20200712232455")
         embed.set_footer(text="WarframeMarketBot")
         await ctx.send(embed=embed)
@@ -88,6 +87,22 @@ async def drops(ctx,*, item):
         )
         relics = '\n'.join(call["Relics"])
         embed.add_field(name="Can be found in the following relics:", value=f"```{relics}```")
+        embed.set_footer(text="WarframeMarketBot")
+        await ctx.send(embed=embed)
+    except Exception as e: 
+        await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
+
+@bot.command()
+async def info(ctx,*, item):
+    try:
+        call = await api_calls.item_info(item)
+        embed = discord.Embed(
+            title=f"Your requested item: {item}",
+            color=discord.Color.green()
+        )
+        embed.set_thumbnail(url=call["Image"])
+        embed.add_field(name="", value= "Your item stats are the following:", inline=False)
+        embed.add_field(name= "", value= call["Stats"], inline=False)	
         embed.set_footer(text="WarframeMarketBot")
         await ctx.send(embed=embed)
     except: 
