@@ -64,20 +64,29 @@ async def price(ctx,*, item, member: discord.Member = None):
 async def baro(ctx):
     try:
         call = await api_calls.void_trader()
-        embed = discord.Embed(
-            title="Baro Ki'Teer",
-            description=(f"```¡Baro Baro Ki'Teer has arrived to the solar system! \n"
-                "\n"                        
-                "His stancy will last from the current dates: \n"
-                "\n"
-                f"Started ==> {call['Start']} \n"
-                "\n"
-                f"Ending ==> {call['Ends']} \n"
-                "\n" 
-                f"Currently can be found at {call['Location']}.```"
-            ),
-             color=discord.Color.green()
-        )
+        if call["Active"] is True:
+            embed = discord.Embed(
+                title="Baro Ki'Teer",
+                description=(f"```¡Baro Baro Ki'Teer has arrived to the solar system! \n"
+                    "\n"                        
+                    "His stancy will last from the current dates: \n"
+                    "\n"
+                    f"Started ==> {call['Start']} \n"
+                    "\n"
+                    f"Ending ==> {call['Ends']} \n"
+                    "\n" 
+                    f"Currently can be found at {call['Location']}.```"
+                ),
+                color=discord.Color.green()
+            )
+        else: 
+            embed = discord.Embed(
+                title="Baro Ki'Teer",
+                description="Sorry Tenno, Baro Ki'Teer is not in the solar system right now. \n",
+                color=discord.Color.green()
+            )
+            
+
         #embed.set_image(url="https://static.wikia.nocookie.net/warframe/images/a/a7/TennoCon2020BaroCropped.png/revision/latest?cb=20200712232455")
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)

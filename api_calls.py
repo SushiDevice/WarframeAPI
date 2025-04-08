@@ -33,10 +33,12 @@ async def void_trader():
             start = result["activation"]
             ends = result["expiry"]
             location = result["location"]
+            isActive = result["active"]
             f_result = {
                 "Start": start,
                 "Ends": ends,
                 "Location":location,
+                "Active": isActive
             }
             return f_result
 
