@@ -10,7 +10,18 @@
 
  - Warframe Community market API: https://warframe.market/api_docs
  - Warframe Status API: https://docs.warframestat.us/
+   
+## Installation
 
+You must install discord.py
+```
+py -3 -m pip install -U discord.py
+```
+Then install aioshttp 
+
+```
+pip install aiohttp
+```
 ## Current functionalities
 
 For now, this bot allows 5 commands:
