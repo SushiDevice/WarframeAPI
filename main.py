@@ -31,22 +31,34 @@ bot = commands.Bot( command_prefix='!',
 global timeAlert
 
 @bot.command()
-async def price(ctx, item):
+async def price(ctx,*, item, member: discord.Member = None):
     try:
+        if member is None:
+            member = ctx.author
         #testing this
         emoji = ctx.bot.get_emoji(1357688180089819177)
         call = await api_calls.request_item(item)
         embed = discord.Embed(
-            title=f"Your requested item '{item}'",
-            description=(
-                f"Is currently {call['price']} platinum {emoji} on warframe market. \n"
-                "\n"
-                f"From seller: {call['seller']}. \n"
-                "\n"
-                f"Has {call['quantity']} in stock."
-            ),
+            title=f"Your requested item: '{item}'",
             color=discord.Color.green()
         )
+        embed.set_author(name=member.display_name, icon_url=member.avatar.url)
+        embed.set_thumbnail(url="https://warframe.market/static/build/resources/images/logo-black.3bec6a3a0f1e6f1edbb1.png")
+        #Testing
+        for i in range(0, len(call)):
+                """
+                embed.add_field(name="Seller", value=f"[{call[i]['name']}](https://warframe.market/profile/{call[i]['name']})", inline=True)
+                embed.add_field(name="Price", value=f"{call[i]['price']} {emoji}", inline=True)
+                embed.add_field(name="Quantity", value=f"{call[i]['quantity']}", inline=True)
+                embed.add_field(name="Platform", value=f"{call[i]['platform']}", inline=False)"""
+                # This is prettier i think...
+                embed.add_field(name="Seller", value=
+                                f" > Name: [{call[i]['name']}](https://warframe.market/profile/{call[i]['name']})"
+                                f" \n > Price: {call[i]["price"]} {emoji} \n>"
+                                f" Stock: {call[i]["quantity"]}  \n>"
+                                f" Platform: {call[i]["platform"]}"
+                                , inline=True)
+        #Testing
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
 
@@ -89,7 +101,7 @@ async def drops(ctx,*, item, member: discord.Member = None):
         )
         embed.set_author(name=member.display_name, icon_url=member.avatar.url)
         relics = '\n'.join(call["Relics"])
-        embed.add_field(name="Can be found in the following relics:", value=f"```{relics}```")
+        embed.add_field(name="Can be found in the following relics:", value=f"{relics}")
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
     except Exception as e: 

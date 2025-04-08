@@ -10,16 +10,23 @@ async def request_item(item: str):
     async with aiohttp.ClientSession() as session:
        async with session.get(f"{MbaseURL}/items/{item}/orders") as response:
             result = await response.json()
-            result = result["payload"]["orders"][0] 
-            price = result["platinum"]
-            seller = result["user"]["ingame_name"]
-            quantity = result["quantity"]
-            f_result = {
-                        "price": price,
-                        "seller": seller,
-                        "quantity": quantity
-                        }
-            return f_result
+            result = result["payload"]["orders"]
+            sellers = []
+            counter = 0
+            for i in result:
+                seller = dict.fromkeys(["name", "price", "quantity", "platform"])
+                seller["price"] = i["platinum"]
+                seller["quantity"] = i["quantity"]
+                seller["name"] = i["user"]["ingame_name"]
+                seller["platform"] = i["user"]["platform"]
+                # Append the dictionary into the list 
+                # we get a list of dictionaries 
+                sellers.append(seller)
+                counter+=1
+                # Limit the number of sellers or we die
+                if counter == 12:
+                    break
+            return sellers
 
 async def void_trader():
     async with aiohttp.ClientSession() as session:
@@ -90,5 +97,5 @@ async def get_warframe(warframe: str):
             }
             return f_result
        
-test = asyncio.run(get_warframe("volt"))
-print(test)
+#test = asyncio.run(request_item("mirage_prime_systems"))
+#print(test)
