@@ -19,12 +19,9 @@ async def request_item(item: str):
                     seller["price"] = i["platinum"]
                     seller["quantity"] = i["quantity"]
                     seller["name"] = i["user"]["ingame_name"]
-                    seller["platform"] = i["user"]["platform"]
-                    # Append the dictionary into the list 
-                    # we get a list of dictionaries 
-                    sellers.append(seller)
-                    counter+=1
-                    # Limit the number of sellers or we die
+                    seller["platform"] = i["user"]["platform"]     # Append the dictionary into the list 
+                    sellers.append(seller)                         # we get a list of dictionaries 
+                    counter+=1                                     # Limit the number of sellers or we die
                     if counter == 12:
                         break
             return sellers
@@ -59,21 +56,40 @@ async def get_drop(item: str):
 
 async def weapon_info(item: str):
     async with aiohttp.ClientSession() as session:
-       async with session.get(f"{SbaseURL}/items/{item}") as response:
+       async with session.get(f"{SbaseURL}/weapons/{item}") as response:
             result = await response.json()
-            damages = result["damage"]
+            basicStats = dict.fromkeys(["crit_chance",
+                                         "crit_mult",
+                                         "fire_rate",
+                                         "mag_size",
+                                         "multi_shot",
+                                         "reload_time",
+                                         "total_damage"]
+                                        )
+            
+            basicStats["crit_chance"] = result["criticalChance"]
+            basicStats["crit_mult"] = result["criticalMultiplier"]
+            basicStats["fire_rate"] = result["fireRate"]
+            basicStats["mag_size"] = result["magazineSize"]
+            basicStats["multi_shot"] = result["multishot"]
+            basicStats["reload_time"] = result["reloadTime"]
+            basicStats["total_damage"] = result["totalDamage"]
+            #damages = result["damage"]
             #damageStat = damages.items()
             # Store as a list of tuples
             #damageStat = "\n".join([f"{k}: {v}" for k, v in damageStat])
             atacks = result["attacks"]
-            # Image from wiki 
-            #image = result["wikiaThumbnail"]
+            type = result["type"]
+            # Handle missing image key
+            image = result.get("wikiaThumbnail", "Image not available")
             f_result = {
                 #"Stats": damageStat,
-                #"Image": image,
+                "Image": image,
                 "Atacks": atacks,
+                "Type": type,
+                "Stats": basicStats
                 }            
-            return f_result["Atacks"][0]
+            return f_result
        
 async def get_warframe(warframe: str):
     async with aiohttp.ClientSession() as session:
@@ -101,5 +117,5 @@ async def get_warframe(warframe: str):
             }
             return f_result
        
-test = asyncio.run(weapon_info("boltor"))
-print(test)
+#test = asyncio.run(weapon_info("arca plasmor"))
+#print(test)

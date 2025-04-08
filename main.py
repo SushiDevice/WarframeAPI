@@ -47,17 +47,12 @@ async def price(ctx,*, item, member: discord.Member = None):
         embed.set_thumbnail(url="https://warframe.market/static/build/resources/images/logo-black.3bec6a3a0f1e6f1edbb1.png")
         #Testing
         for i in range(0, len(call)):
-                """
-                embed.add_field(name="Seller", value=f"[{call[i]['name']}](https://warframe.market/profile/{call[i]['name']})", inline=True)
-                embed.add_field(name="Price", value=f"{call[i]['price']} {emoji}", inline=True)
-                embed.add_field(name="Quantity", value=f"{call[i]['quantity']}", inline=True)
-                embed.add_field(name="Platform", value=f"{call[i]['platform']}", inline=False)"""
                 # This is prettier i think...
                 embed.add_field(name=f"{i}.- Seller", value=
-                                f" > Name: [{call[i]['name']}](https://warframe.market/profile/{call[i]['name']})"
-                                f" \n > Price: {call[i]["price"]} {emoji} \n>"
-                                f" Stock: {call[i]["quantity"]}  \n>"
-                                f" Platform: {call[i]["platform"]}"
+                                f" > Name: [{call[i]['name']}](https://warframe.market/profile/{call[i]['name']}) \n "
+                                f" > Price: {call[i]["price"]} {emoji} \n"
+                                f" > Stock: {call[i]["quantity"]}  \n"
+                                f" > Platform: {call[i]["platform"]}"
                                 , inline=True)
         #Testing
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
@@ -115,17 +110,31 @@ async def weapon(ctx,*, item, member: discord.Member = None):
             member = ctx.author
         call = await api_calls.weapon_info(item)
         embed = discord.Embed(
-            title=f"Your requested item: {item}",
+            title=f"Your requested item: `{item}`",
+            description=f"Weapon type: {call['Type']}",
             color=discord.Color.green()
         )
         embed.set_author(name=member.display_name, icon_url=member.avatar.url)
         embed.set_thumbnail(url=call["Image"])
-        embed.add_field(name="", value= "Your item stats are the following:", inline=True)
-        embed.add_field(name= "", value= call["Stats"], inline=False)	
+        embed.add_field(name="Basic stats", value=
+                        f"> Critical chance: {call["Stats"]["crit_chance"]} \n"
+                        f"> Critical multiplier: {call["Stats"]["crit_mult"]}\n"
+                        f"> Fire rate: {call["Stats"]["fire_rate"]}\n"
+                        f"> Magazine: {call["Stats"]["mag_size"]}\n"
+                        f"> Multishot: {call["Stats"]["multi_shot"]}\n"
+                        )
+        # Maybe store call["Atack"] for more redeability?
+        for i in range(0, len(call["Atacks"])):
+            embed.add_field(name=f"{call['Atacks'][i]["name"]}", value=
+                            f" > Speed: {call['Atacks'][i]["speed"]} \n"
+                            f" > Critical Chance: {call['Atacks'][i]["crit_chance"]} \n"
+                            f" > Critical Multiplier: {call['Atacks'][i]["crit_mult"]} \n"
+                            f" > Status Chance: {call['Atacks'][i]["status_chance"]} \n"
+                            , inline=True)
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
-    except: 
-        await ctx.send("An error ocurred in your query, please try again later")
+    except Exception as e: 
+        await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
 
 @bot.command()
 async def warframe(ctx,*, warframe, member: discord.Member = None):
