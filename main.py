@@ -109,11 +109,11 @@ async def drops(ctx,*, item, member: discord.Member = None):
         await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
 
 @bot.command()
-async def iteminfo(ctx,*, item, member: discord.Member = None):
+async def weapon(ctx,*, item, member: discord.Member = None):
     try:
         if member is None:
             member = ctx.author
-        call = await api_calls.item_info(item)
+        call = await api_calls.weapon_info(item)
         embed = discord.Embed(
             title=f"Your requested item: {item}",
             color=discord.Color.green()
@@ -134,7 +134,8 @@ async def warframe(ctx,*, warframe, member: discord.Member = None):
             member = ctx.author
         call = await api_calls.get_warframe(warframe)
         embed = discord.Embed(
-            title=f"Your requested warframe: {warframe}",
+            title=f"Your requested warframe: `{warframe}`",
+            description="The called warframe has the following stats:",
             color=discord.Color.green()
         )
         embed.set_author(name=member.display_name, icon_url=member.avatar.url)
@@ -143,6 +144,7 @@ async def warframe(ctx,*, warframe, member: discord.Member = None):
         embed.add_field(name="Armor", value= f"{call["Armor"]}", inline=True)
         embed.add_field(name="Energy", value= f"{call["Energy"]}", inline=True)
         embed.add_field(name="Shields", value= f"{call["Shields"]}", inline=True)
+        embed.add_field(name="Aura", value= f"{call["Aura"]}", inline=True)
         embed.add_field(name="Mastery Required", value= f"{call["Mastery"]}", inline=True)
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
