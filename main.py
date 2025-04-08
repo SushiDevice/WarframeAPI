@@ -39,7 +39,8 @@ async def price(ctx,*, item, member: discord.Member = None):
         emoji = ctx.bot.get_emoji(1357688180089819177)
         call = await api_calls.request_item(item)
         embed = discord.Embed(
-            title=f"Your requested item: '{item}'",
+            title=f"Your requested item: `{item}`",
+            description="Here are some offers available on Warframe Market",
             color=discord.Color.green()
         )
         embed.set_author(name=member.display_name, icon_url=member.avatar.url)
@@ -52,7 +53,7 @@ async def price(ctx,*, item, member: discord.Member = None):
                 embed.add_field(name="Quantity", value=f"{call[i]['quantity']}", inline=True)
                 embed.add_field(name="Platform", value=f"{call[i]['platform']}", inline=False)"""
                 # This is prettier i think...
-                embed.add_field(name="Seller", value=
+                embed.add_field(name=f"{i}.- Seller", value=
                                 f" > Name: [{call[i]['name']}](https://warframe.market/profile/{call[i]['name']})"
                                 f" \n > Price: {call[i]["price"]} {emoji} \n>"
                                 f" Stock: {call[i]["quantity"]}  \n>"
