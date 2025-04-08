@@ -57,7 +57,6 @@ async def price(ctx,*, item, member: discord.Member = None):
         #Testing
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
-
     except Exception as e:
         await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
 
@@ -82,8 +81,8 @@ async def baro(ctx):
         #embed.set_image(url="https://static.wikia.nocookie.net/warframe/images/a/a7/TennoCon2020BaroCropped.png/revision/latest?cb=20200712232455")
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
-    except:
-        await ctx.send("An error ocurred in your query, please try again later")
+    except Exception as e: 
+        await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
 
 @bot.command()
 async def drops(ctx,*, item, member: discord.Member = None):
@@ -123,6 +122,7 @@ async def weapon(ctx,*, item, member: discord.Member = None):
                         f"> Magazine: {call["Stats"]["mag_size"]}\n"
                         f"> Multishot: {call["Stats"]["multi_shot"]}\n"
                         )
+        embed.add_field(name="__🔸 Attack Types:__", value="", inline=False)
         # Maybe store call["Atack"] for more redeability?
         for i in range(0, len(call["Atacks"])):
             embed.add_field(name=f"{call['Atacks'][i]["name"]}", value=
@@ -157,8 +157,8 @@ async def warframe(ctx,*, warframe, member: discord.Member = None):
         embed.add_field(name="Mastery Required", value= f"{call["Mastery"]}", inline=True)
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
-    except:
-        await ctx.send("An error ocurred in your query, please try again later")
+    except Exception as e: 
+        await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
 
 # In construction
 """@bot.command()
