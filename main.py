@@ -6,6 +6,7 @@ import logging
 import api_calls
 import time
 import datetime
+from utils import parser
 
 #bot.invoke allows to invoke a command from another command
 
@@ -37,6 +38,8 @@ async def price(ctx,*, item, member: discord.Member = None):
             member = ctx.author
         #testing this
         emoji = ctx.bot.get_emoji(1357688180089819177)
+        print(item)
+        item = parser.priceParse(item)
         call = await api_calls.request_item(item)
         embed = discord.Embed(
             title=f"Your requested item: `{item}`",
@@ -119,7 +122,7 @@ async def weapon(ctx,*, item, member: discord.Member = None):
         call = await api_calls.weapon_info(item)
         embed = discord.Embed(
             title=f"Your requested item: `{item}`",
-            description=f"Weapon type: {call['Type']}",
+            description=f"__Weapon type:__ {call['Type']}",
             color=discord.Color.green()
         )
         embed.set_author(name=member.display_name, icon_url=member.avatar.url)
@@ -140,6 +143,7 @@ async def weapon(ctx,*, item, member: discord.Member = None):
                             f" > Critical Multiplier: {call['Atacks'][i]["crit_mult"]} \n"
                             f" > Status Chance: {call['Atacks'][i]["status_chance"]} \n"
                             , inline=True)
+        embed.add_field(name="", value=f"You can find a related build to [{item}](https://overframe.gg/?hl=es) here.", inline=False)
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
         await ctx.send(embed=embed)
     except Exception as e: 
@@ -165,6 +169,32 @@ async def warframe(ctx,*, warframe, member: discord.Member = None):
         embed.add_field(name="Aura", value= f"{call["Aura"]}", inline=True)
         embed.add_field(name="Mastery Required", value= f"{call["Mastery"]}", inline=True)
         embed.set_footer(text="WarframeMarketBot - type !help to get more info about commands!")
+        await ctx.send(embed=embed)
+    except Exception as e: 
+        await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
+
+@bot.command()
+async def helpme(ctx):
+    try:
+        botImage = bot.user.avatar.url
+        embed = discord.Embed(
+            title="Hi! I'm WarframeMarketBot",
+            description="I can help you with the following commands:",
+            color=discord.Color.green()
+        )
+        embed.add_field(name="", value=""
+                                    "`!price <item>` Get the price of an item on Warframe Market. \n"
+                                    "\n"
+                                    "`!drops <item>` Get the relics where you can find an item. \n"
+                                    "\n"
+                                    "`!weapon <item>` Get the stats of a weapon. \n"
+                                    "\n"
+                                    "`!warframe <warframe>` Get the stats of a warframe. \n"
+                                    "\n"
+                                    "`!baro` Get the current status of Baro Ki'Teer. \n"
+                                    )
+        embed.set_thumbnail(url=botImage)
+        embed.set_footer(text="WarframeMarketBot - Call me when you need me!")
         await ctx.send(embed=embed)
     except Exception as e: 
         await ctx.send(f"An error occurred in your query, please try again later. Details: {e}")
