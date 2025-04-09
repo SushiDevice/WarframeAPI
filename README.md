@@ -22,6 +22,12 @@ Then install aioshttp
 ```
 pip install aiohttp
 ```
+Finally, you can run the code executing main.py file
+
+```
+python main.py
+```
+
 ## Current functionalities
 
 For now, this bot allows 5 commands:
